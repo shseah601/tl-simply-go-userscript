@@ -33,8 +33,6 @@
 
     addExtraYearMonthFilter();
 
-    addCalculateTotalPostedAmountButton();
-
     addCalculateTotalAmountButton();
 
     function cssElement(url) {
@@ -310,22 +308,12 @@
         calculateButton.addClass('btn-primary float-start me-2');
 
         calculateButton.click(function () {
+
+            const totalPosted = calculateTrxAmount('posted');
+            getTotalAmountResult(totalPosted, 'posted');
+
             const total = calculateTrxAmount();
-            getTotalAmountResult(total, 'Total');
-        });
-
-        searchButtonGroups.prepend(calculateButton);
-    }
-
-    function addCalculateTotalPostedAmountButton() {
-        const searchButtonGroups = $('#Search_form > div');
-
-        const calculateButton = createBSButton({text: 'Calculate Posted'});
-        calculateButton.addClass('btn-secondary float-start');
-
-        calculateButton.click(function () {
-            const total = calculateTrxAmount('posted');
-            getTotalAmountResult(total, 'Total Posted');
+            getTotalAmountResult(total, '');
         });
 
         searchButtonGroups.prepend(calculateButton);
@@ -333,21 +321,39 @@
 
     function getTotalAmountResult(total, type) {
 
-        const transactionHistory = $('#MyStat_result');
+        let alertId = 'totalTransactionsAmountAlert';
+        let title = 'Total';
+        let alertConfig = {
+            alertClass: 'alert-success'
+        };
 
-        const alertId = 'totalTransactionsAmountAlert';
+        if (type === 'posted') {
+            alertId = 'totalTransactionsPostedAmountAlert';
+            title = 'Total Posted';
+            alertConfig = {
+                alertClass: 'alert-secondary'
+            };
+        }
+
+        const alert = getAlert(alertId, alertConfig);
+        alert.text(title + ': ' + convertTotalCentsToSGD(total));
+    }
+
+    function getAlert(alertId, alertConfig) {
+        const transactionHistory = $('#MyStat_result');
 
         let alert = $('#' + alertId);
 
         if (alert.length === 0) {
             alert = $(document.createElement('div'));
             alert.prop('id', alertId);
-            alert.addClass('alert alert-success');
+            alert.addClass('alert');
+            alert.addClass(alertConfig.alertClass);
             
             transactionHistory.prepend(alert);
         }
 
-        alert.text(type + ': ' + convertTotalCentsToSGD(total));        
+        return alert;
     }
 
     function createBSButton(buttonConfig) {
