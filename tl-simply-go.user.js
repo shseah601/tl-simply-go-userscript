@@ -1,8 +1,9 @@
 // ==UserScript==
 // @name         TL SimplyGo Statement Calculation
-// @namespace    http://tampermonkey.net/
-// @updateURL    
-// @version      0.1
+// @namespace    simplygo.transitlink.com.sg
+// @updateURL    https://github.com/shseah601/tl-simply-go-userscript/blob/main/tl-simply-go.user.js
+// @downloadURL  https://github.com/shseah601/tl-simply-go-userscript/blob/main/tl-simply-go.user.js
+// @version      0.2
 // @description  Calculate the total amount of all transaction in statement page.
 // @author       Seah Sheng Hong
 // @match        https://simplygo.transitlink.com.sg/Cards/Transactions
@@ -13,76 +14,76 @@
 
 /* globals jQuery, $, waitForKeyElements */
 
-(function() {
-  'use strict';
+(function () {
+    'use strict';
 
-  GM_registerMenuCommand('Total Amount', getTrxAmountRows, '1');
-  
-  // TODO: add modal to show total amount
-  // TODO: add modal to select month
+    GM_registerMenuCommand('Total Amount', getTrxAmountRows, '1');
 
-  function getTrxAmountRows() {
-      const fromDateInput = $('#FromDate').get(0);
-      const toDateInput = $('#ToDate').get(0);
+    // TODO: add modal to show total amount
+    // TODO: add modal to select month
 
-      const fromDate = new Date(fromDateInput.value);
-      const toDate = new Date(toDateInput.value);
+    function getTrxAmountRows() {
+        const fromDateInput = $('#FromDate').get(0);
+        const toDateInput = $('#ToDate').get(0);
 
-      const fromDateString = formatDate(fromDate);
-      const toDateString = formatDate(toDate);
+        const fromDate = new Date(fromDateInput.value);
+        const toDate = new Date(toDateInput.value);
 
-      const trxAmountRows = $(".Table-payment-statement > tbody > tr > td.col3:not(.hiddenRow)");
+        const fromDateString = formatDate(fromDate);
+        const toDateString = formatDate(toDate);
 
-      let total = 0;
+        const trxAmountRows = $(".Table-payment-statement > tbody > tr > td.col3:not(.hiddenRow)");
 
-      for (const trxAmountRow of trxAmountRows) {
-          total += convertMoneyTextToNumber(trxAmountRow.innerText);
-      }
+        let total = 0;
 
-      console.log(`From ${fromDateString} to ${toDateString}`, `$${(total / 100).toFixed(2)}`);
-  }
+        for (const trxAmountRow of trxAmountRows) {
+            total += convertMoneyTextToNumber(trxAmountRow.innerText);
+        }
 
-  function convertMoneyTextToNumber(moneyText) {
+        console.log(`From ${fromDateString} to ${toDateString}`, `$${(total / 100).toFixed(2)}`);
+    }
 
-      let convertedMoney = 0;
+    function convertMoneyTextToNumber(moneyText) {
 
-      if (moneyText.startsWith('$')) {
-          const moneyNumber = parseFloat(moneyText.slice(1));
+        let convertedMoney = 0;
 
-          if (!isNaN(moneyNumber)) {
+        if (moneyText.startsWith('$')) {
+            const moneyNumber = parseFloat(moneyText.slice(1));
 
-              convertedMoney = convertMoneyNumberWhenValid(moneyNumber);
-          }
-      } else {
-          const moneyNumber = parseFloat(moneyText);
+            if (!isNaN(moneyNumber)) {
 
-          convertedMoney = convertMoneyNumberWhenValid(moneyNumber);
-      }
+                convertedMoney = convertMoneyNumberWhenValid(moneyNumber);
+            }
+        } else {
+            const moneyNumber = parseFloat(moneyText);
 
-      return convertedMoney;
-  }
+            convertedMoney = convertMoneyNumberWhenValid(moneyNumber);
+        }
 
-  function convertMoneyNumberWhenValid(moneyNumber) {
-      if (typeof moneyNumber !== 'number') {
-          return 0;
-      }
+        return convertedMoney;
+    }
 
-      if (!isNaN(moneyNumber)) {
-          return moneyNumber * 100;
-      }
+    function convertMoneyNumberWhenValid(moneyNumber) {
+        if (typeof moneyNumber !== 'number') {
+            return 0;
+        }
 
-      return 0;
-  }
+        if (!isNaN(moneyNumber)) {
+            return moneyNumber * 100;
+        }
 
-  function formatDate(date) {
-      const month = date.getMonth() + 1;
-      const monthText = month.toString().padStart(2, '0');
+        return 0;
+    }
 
-      const day = date.getDate();
-      const dayText = day.toString().padStart(2, '0');
+    function formatDate(date) {
+        const month = date.getMonth() + 1;
+        const monthText = month.toString().padStart(2, '0');
 
-      return `${date.getFullYear()}-${monthText}-${dayText}`;
-  }
+        const day = date.getDate();
+        const dayText = day.toString().padStart(2, '0');
+
+        return `${date.getFullYear()}-${monthText}-${dayText}`;
+    }
 })();
 
 
