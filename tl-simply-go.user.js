@@ -1,8 +1,6 @@
 // ==UserScript==
 // @name         TL SimplyGo Statement Calculation
 // @namespace    simplygo.transitlink.com.sg
-// @updateURL    https://github.com/shseah601/tl-simply-go-userscript/blob/main/tl-simply-go.user.js
-// @downloadURL  https://github.com/shseah601/tl-simply-go-userscript/blob/main/tl-simply-go.user.js
 // @version      0.3
 // @description  Calculate the total amount of all transaction in statement page.
 // @author       Seah Sheng Hong
