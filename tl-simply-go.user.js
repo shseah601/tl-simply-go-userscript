@@ -33,6 +33,8 @@
 
     addExtraYearMonthFilter();
 
+    addCalculateTotalPostedAmountButton();
+
     addCalculateTotalAmountButton();
 
     function cssElement(url) {
@@ -42,8 +44,13 @@
         link.type="text/css";
         return link;
     }
+    total = 0.0
+    for (const el of $("tr[style='color:#fff;'] > .col3")) {
+      total += parseFloat(el.textContent.replace('$', ''))
+    }
+    Number((total).toFixed(2))
 
-    function calculateTrxAmount() {
+    function calculateTrxAmount(type) {
         const fromDateInput = $('#FromDate').get(0);
         const toDateInput = $('#ToDate').get(0);
 
@@ -53,7 +60,12 @@
         const fromDateString = formatDate(fromDate);
         const toDateString = formatDate(toDate);
 
-        const trxAmountRows = $(".Table-payment-statement > tbody > tr > td.col3:not(.hiddenRow)");
+        let trxAmountRows = [];
+        if (type === 'posted') {
+            trxAmountRows = $('#MyStat_result > fieldset > div > table > tbody > tr > td > div > table > tbody > tr > td.col3:not(.hiddenRow)');
+        } else {
+            trxAmountRows = $(".Table-payment-statement > tbody > tr > td.col3:not(.hiddenRow)");
+        }
 
         let total = 0;
 
@@ -294,18 +306,32 @@
     function addCalculateTotalAmountButton() {
         const searchButtonGroups = $('#Search_form > div');
 
-        const calculateButton = createBSButton({text: 'Calculate'});
-        calculateButton.addClass('btn-primary float-start');
+        const calculateButton = createBSButton({text: 'Calculate Total'});
+        calculateButton.addClass('btn-primary float-start me-2');
 
         calculateButton.click(function () {
             const total = calculateTrxAmount();
-            getTotalAmountResult(total);
+            getTotalAmountResult(total, 'Total');
         });
 
         searchButtonGroups.prepend(calculateButton);
     }
 
-    function getTotalAmountResult(total) {
+    function addCalculateTotalPostedAmountButton() {
+        const searchButtonGroups = $('#Search_form > div');
+
+        const calculateButton = createBSButton({text: 'Calculate Posted'});
+        calculateButton.addClass('btn-secondary float-start');
+
+        calculateButton.click(function () {
+            const total = calculateTrxAmount('posted');
+            getTotalAmountResult(total, 'Total Posted');
+        });
+
+        searchButtonGroups.prepend(calculateButton);
+    }
+
+    function getTotalAmountResult(total, type) {
 
         const transactionHistory = $('#MyStat_result');
 
@@ -321,7 +347,7 @@
             transactionHistory.prepend(alert);
         }
 
-        alert.text('Total: ' + convertTotalCentsToSGD(total));        
+        alert.text(type + ': ' + convertTotalCentsToSGD(total));        
     }
 
     function createBSButton(buttonConfig) {

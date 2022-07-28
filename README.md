@@ -4,7 +4,7 @@ Since SimplyGo mobile application or website are not able to calculate the total
 
 ## Main Function
 
-  1. Calculate `MY STATEMENTS` Total Amount.
+  1. Calculate `MY STATEMENTS` Total Amount and Posted Amount.
   2. Year and Month selection for monthly statement.
 
 ## Screenshots
