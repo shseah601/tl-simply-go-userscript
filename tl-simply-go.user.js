@@ -229,7 +229,6 @@
 
         const monthOptionConfigs = []
         for (let i = 0; i < monthNames.length; i++) {
-            console.log(yearSelectValue, thisYear, i, thisMonth)
             if (yearSelectValue === thisYear && i > thisMonth) {
                 continue;
             }
@@ -242,8 +241,6 @@
 
             monthOptionConfigs.push(monthOptionConfig);
         }
-
-        console.log('monthOptionConfigs', monthOptionConfigs)
 
         return monthOptionConfigs;
     }
@@ -289,7 +286,6 @@
         const today = new Date();
         const todayDayNumber = today.getDate();
 
-        console.log(toDate, today)
         if (toDate.valueOf() > today.valueOf()) {
             toDateDayNumber = todayDayNumber;
         }
