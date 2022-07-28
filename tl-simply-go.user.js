@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TL SimplyGo Statement Calculation
 // @namespace    simplygo.transitlink.com.sg
-// @version      0.3
+// @version      0.4
 // @description  Calculate the total amount of all transaction in statement page.
 // @author       Seah Sheng Hong
 // @match        https://simplygo.transitlink.com.sg/Cards/Transactions
